@@ -1,0 +1,38 @@
+package Main.edittor;
+
+import Core.Gui.GuiButton;
+import Core.Gui.GuiPanel;
+import Main.MIP.Author;
+
+@SuppressWarnings("serial")
+public class EntityEdittor extends EdittorPanel {
+	
+	public EntityEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	protected void initGui() {
+		super.initGui();
+		
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		
+	}
+	
+	@Override
+	public void buttonPressed(GuiButton button) {
+		super.buttonPressed(button);
+		
+		this.refreshFields();
+	}
+	
+}

@@ -1,0 +1,35 @@
+package Main.MIP;
+
+public class Block {
+	
+	public String name;
+	public String type;
+	public boolean ignoresGravity;
+	public boolean hasTranspanrency;
+	public boolean emitsLight;
+	public String blastResistance;
+	public String harvestLevel;
+	public String stackLimit;
+	public boolean flammable;
+	public Drop[] drops;
+	
+	public Block() {
+		this.name = "Stone";
+		this.type = "Solid";
+		this.ignoresGravity = true;
+		this.hasTranspanrency = false;
+		this.emitsLight = false;
+		this.blastResistance = "0";
+		this.harvestLevel = "Wood";
+		this.stackLimit = "64";
+		this.flammable = false;
+		this.drops = new Drop[0];
+		
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

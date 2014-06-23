@@ -1,0 +1,10 @@
+package Main.MIP;
+
+public class Drop {
+	
+	public String name;
+	public int chance;
+	public int rate_min;
+	public int rate_max;
+	
+}

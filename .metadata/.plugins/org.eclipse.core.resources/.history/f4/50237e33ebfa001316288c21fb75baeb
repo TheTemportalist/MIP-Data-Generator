@@ -1,0 +1,151 @@
+package Main.edittor;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.ListModel;
+
+import Core.Gui.GuiButton;
+import Core.Gui.GuiPanel;
+import Main.MIP.Block;
+import Main.MIP.Drop;
+
+@SuppressWarnings("serial")
+public class BlockEdittor extends EdittorPanel {
+	
+	JComboBox<Block.Type> blockType;
+	JCheckBox ignoresGravity;
+	JCheckBox hasTransparency;
+	JCheckBox emitsLight;
+	JCheckBox flammable;
+	
+	public BlockEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		int buttonID = 0;
+		
+		this.labels.add(this.createLabel(10, 10, 100, 20, "Name:"));
+		this.fields.add(this.createTextFeld(100, 10, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 35, 100, 20, "Type:"));
+		this.blockType = new JComboBox<Block.Type>();
+		this.blockType.setBounds(100, 35, 150, 25);
+		this.blockType.addActionListener(this);
+		this.blockType.setModel(new DefaultComboBoxModel<Block.Type>(Block.Type.values()));
+		this.add(this.blockType);
+		
+		this.ignoresGravity = new JCheckBox("Is not affected by gravity");
+		this.ignoresGravity.setBounds(10, 60, 200, 20);
+		this.add(this.ignoresGravity);
+		
+		this.hasTransparency = new JCheckBox("Is Transparent");
+		this.hasTransparency.setBounds(10, 80, 200, 20);
+		this.add(this.hasTransparency);
+		
+		this.emitsLight = new JCheckBox("Emits Light");
+		this.emitsLight.setBounds(10, 100, 200, 20);
+		this.add(this.emitsLight);
+		
+		this.labels.add(this.createLabel(10, 120, 120, 20, "Blast Resistance:"));
+		this.fields.add(this.createTextFeld(120, 120, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 145, 120, 20, "Harvest Level:"));
+		this.fields.add(this.createTextFeld(120, 145, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 170, 120, 20, "Stack limit:"));
+		this.fields.add(this.createTextFeld(120, 170, 200, 20, 100, this));
+		
+		this.flammable = new JCheckBox("Is Flammable");
+		this.flammable.setBounds(10, 190, 200, 20);
+		this.add(this.flammable);
+		
+		ListEdittor drops = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				return new Drop();
+			}
+		};
+		buttonID = drops.init(this, buttonID, 330, 10, 220, 300, "Drops");
+		this.edittors.add(drops);
+		
+		this.refreshFields();
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		Block block = (Block)this.value;
+		
+		this.fields.get(0).setText(block.name);
+		
+		for (int i = 0; i < Block.Type.values().length; i++) {
+			if (Block.Type.values()[i] == block.type) {
+				this.blockType.setSelectedIndex(i);
+				break;
+			}
+		}
+		
+		this.ignoresGravity.setSelected(block.ignoresGravity);
+		this.hasTransparency.setSelected(block.hasTranspanrency);
+		this.emitsLight.setSelected(block.emitsLight);
+		
+		this.fields.get(1).setText(block.blastResistance);
+		this.fields.get(2).setText(block.harvestLevel);
+		this.fields.get(3).setText(block.stackLimit);
+		
+		this.flammable.setSelected(block.flammable);
+		
+		this.edittors.get(0).refreshList(block.drops);
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		Block block = new Block();
+		
+		block.name = this.fields.get(0).getText();
+		block.type = this.blockType.getItemAt(this.blockType.getSelectedIndex());
+		block.ignoresGravity = this.ignoresGravity.isSelected();
+		block.hasTranspanrency = this.hasTransparency.isSelected();
+		block.emitsLight = this.emitsLight.isSelected();
+		block.blastResistance = this.fields.get(1).getText();
+		block.harvestLevel = this.fields.get(2).getText();
+		block.stackLimit = this.fields.get(3).getText();
+		block.flammable = this.flammable.isSelected();
+		
+		ListModel model = null;
+		Object[] data;
+		
+		model = this.edittors.get(0).getList().getModel();
+		data = new Drop[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			data[i] = (Drop) model.getElementAt(i);
+		block.drops = (Drop[]) data;
+		
+		this.value = block;
+	}
+	
+	@Override
+	public void buttonPressed(GuiButton button) {
+		super.buttonPressed(button);
+		
+		Block b = (Block)this.value;
+		ListEdittor edittor = null;
+		
+		edittor = this.edittors.get(0);
+		if (edittor.isValidButton(button.id)) {
+			Object[] objs = edittor.buttonPress(button.id, b.drops);
+			b.drops = new Drop[objs.length];
+			for (int j = 0; j < objs.length; j++) {
+				b.drops[j] = (Drop) objs[j];
+			}
+		}
+		
+		this.refreshFields();
+	}
+	
+}

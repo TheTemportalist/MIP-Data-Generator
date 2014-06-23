@@ -1,0 +1,45 @@
+package Main.edittor;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import Core.Gui.GuiPanel;
+
+@SuppressWarnings("serial")
+public class DescriptionEdittor extends EdittorPanel {
+	
+	JTextArea edittorArea;
+	
+	public DescriptionEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		this.edittorArea = new JTextArea();
+		this.edittorArea.setBounds(10, 10, this.xSize - 20, 305);
+		this.edittorArea.setLineWrap(true);
+		
+		JScrollPane scroll = new JScrollPane(this.edittorArea);
+		scroll.setBounds(this.edittorArea.getBounds());
+		this.add(scroll);
+		
+		this.refreshFields();
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		this.edittorArea.setText((String)this.value);
+		
+	}
+
+	@Override
+	public void saveFields() {
+		this.value = this.edittorArea.getText();
+		
+	}
+	
+}

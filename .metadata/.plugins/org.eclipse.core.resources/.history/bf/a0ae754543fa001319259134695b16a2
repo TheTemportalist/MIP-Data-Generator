@@ -1,0 +1,46 @@
+package Main.MIP;
+
+import java.util.HashMap;
+
+public class Item {
+	
+	public String name;
+	public Type type;
+	
+	public enum Type {
+		MATERIAL("Material"), FOOD("Food"), TOOL("Tool"), WEAPON("Weapon"), ARMOR("Armor"), TRANSPORTATION(
+				"Transportation"), POTION("Potion"), MUSICDISC("Music Disc"), EGG("Egg"), OTHER(
+				"Other");
+		
+		private static HashMap<String, Integer> positions = new HashMap<String, Integer>();
+		
+		String name;
+		
+		Type(String name) {
+			this.name = name;
+		}
+		
+		@Override
+		public String toString() {
+			return this.name;
+		}
+		
+		public static Type getType(String name) {
+			return Type.positions.containsKey(name) ? Type.values()[Type.positions.get(name)]
+					: null;
+		}
+		
+	}
+	
+	public Item() {
+		this.name = "item";
+		this.type = Type.MATERIAL;
+		
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

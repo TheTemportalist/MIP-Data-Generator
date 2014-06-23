@@ -1,0 +1,16 @@
+package Main.MIP;
+
+public class Block {
+	
+	public String name;
+	public String type;
+	public boolean ignoresGravity;
+	public boolean hasTranspanrency;
+	
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

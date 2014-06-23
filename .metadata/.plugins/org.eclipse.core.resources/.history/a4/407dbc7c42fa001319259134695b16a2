@@ -1,0 +1,19 @@
+package Main.MIP;
+
+public class Item {
+	
+	public String name;
+	public String type;
+	
+	public Item() {
+		this.name = "item";
+		this.type = "Material";
+		
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

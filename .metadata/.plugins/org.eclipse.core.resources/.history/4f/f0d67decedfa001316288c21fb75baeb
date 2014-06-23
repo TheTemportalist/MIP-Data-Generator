@@ -1,0 +1,64 @@
+package Main.edittor;
+
+import Core.Gui.GuiPanel;
+import Main.MIP.Drop;
+
+@SuppressWarnings("serial")
+public class DropEdittor extends EdittorPanel {
+	
+	public DropEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Name:"));
+		this.fields.add(this.createTextFeld(100, 10, 100, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 35, 90, 20, "Chance:"));
+		this.fields.add(this.createTextFeld(100, 35, 100, 20, 100, this));
+		this.labels.add(this.createLabel(200, 35, 20, 20, "%"));
+		
+		this.labels.add(this.createLabel(10, 60, 90, 20, "Rate:"));
+		
+		this.labels.add(this.createLabel(15, 80, 90, 20, "Minimum:"));
+		this.fields.add(this.createTextFeld(100, 80, 100, 20, 100, this));
+		
+		this.labels.add(this.createLabel(15, 105, 90, 20, "Maximum:"));
+		this.fields.add(this.createTextFeld(100, 105, 100, 20, 100, this));
+		
+		this.refreshFields();
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		Drop drop = (Drop) this.value;
+		
+		this.fields.get(0).setText(drop.name);
+		char lastChar = drop.chance.toCharArray()[drop.chance.length() - 1];
+		String chanceText = drop.chance;
+		if (lastChar == '%') {
+			chanceText = drop.chance.substring(0, drop.chance.length() - 1);
+		}
+		this.fields.get(1).setText();
+		this.fields.get(2).setText(drop.rate_minimum);
+		this.fields.get(3).setText(drop.rate_maximum);
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		Drop drop = new Drop();
+		
+		drop.name = this.fields.get(0).getText();
+		drop.chance = this.fields.get(1).getText() + "%";
+		drop.rate_minimum = this.fields.get(2).getText();
+		drop.rate_maximum = this.fields.get(3).getText();
+		
+		this.value = drop;
+	}
+	
+}

@@ -1,0 +1,34 @@
+package Main.edittor;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class LongCellRenderer extends DefaultListCellRenderer {
+	
+	final JPanel p = new JPanel(new BorderLayout());
+	final JLabel lt = new JLabel();
+	String pre = "<html><body style='width: 200px;'>";
+	
+	public LongCellRenderer(int width) {
+		p.add(lt, BorderLayout.CENTER);
+		this.pre = "<html><body style='width: " + width + "px;'>";
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Component getListCellRendererComponent(final JList list, final Object value,
+			final int index, final boolean isSelected, final boolean cellHasFocus) {
+		super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+		
+		final String text = (String) value;
+		lt.setText(pre + text);
+		
+		return p;
+	}
+}

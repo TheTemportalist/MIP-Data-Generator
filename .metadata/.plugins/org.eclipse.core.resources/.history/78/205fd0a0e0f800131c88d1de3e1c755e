@@ -1,0 +1,30 @@
+package Main;
+
+import java.io.File;
+
+import javax.swing.filechooser.FileFilter;
+
+public class JsonFilter extends FileFilter {
+	
+	@Override
+	public boolean accept(File f) {
+		if (f.isDirectory())
+			return false;
+		else {
+			String extension = null;
+			
+			
+			
+			if (extension != null) {
+				return extension.equals("json");
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public String getDescription() {
+		return null;
+	}
+	
+}

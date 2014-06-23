@@ -1,0 +1,7 @@
+package Main;
+
+import javax.swing.filechooser.FileFilter;
+
+public class JsonFilter extends FileFilter {
+	
+}

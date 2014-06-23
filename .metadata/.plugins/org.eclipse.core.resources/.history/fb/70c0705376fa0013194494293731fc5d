@@ -1,0 +1,59 @@
+package Main.edittor;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+
+import Core.Gui.GuiPanel;
+import Main.MIP.Item;
+
+@SuppressWarnings("serial")
+public class ItemEdittor extends EdittorPanel {
+	
+	JComboBox<Item.Type> itemType;
+	
+	public ItemEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Name:"));
+		this.fields.add(this.createTextFeld(100, 11, 100, 20, 100, this));
+		
+		this.itemType = new JComboBox<Item.Type>();
+		
+		
+		this.itemType.setModel(new DefaultComboBoxModel<E>(Item.Type.values()));
+		JComboBox<String> selectableList = new JComboBox<String>(new String[] {
+				"a", "b", "c", "d"
+		});
+		selectableList.setBounds(10, 10, 100, 30);
+		selectableList.setSelectedIndex(0);
+		selectableList.addActionListener(this);
+		this.add(selectableList);
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
+		if (e.getSource() instanceof JComboBox) {
+			
+		}
+	}
+	
+	@Override
+	public void refreshFields() {
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		
+	}
+	
+}

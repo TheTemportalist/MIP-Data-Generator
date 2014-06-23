@@ -1,0 +1,29 @@
+package Main.MIP;
+
+public class Item {
+	
+	public String name;
+	public Type type;
+	
+	public enum Type {
+		MATERIAL, FOOD, TOOL, WEAPON, ARMOR, TRANSPORTATION, POTION, MUSICDISC, EGG, OTHER
+		
+		@Override
+		public String toString() {
+			return this.name();
+		}
+		
+	}
+	
+	public Item() {
+		this.name = "item";
+		this.type = Type.MATERIAL;
+		
+	}
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

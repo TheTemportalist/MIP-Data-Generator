@@ -1,0 +1,92 @@
+package Main.edittor;
+
+import Core.Gui.GuiButton;
+import Core.Gui.GuiPanel;
+import Main.MIP.Author;
+import Main.MIP.Drop;
+import Main.MIP.Entity;
+
+@SuppressWarnings("serial")
+public class EntityEdittor extends EdittorPanel {
+	
+	public EntityEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	protected void initGui() {
+		super.initGui();
+		int buttonID = this.save.id;
+		
+		this.labels.add(this.createLabel(10, 10, 140, 20, "Name:"));
+		this.fields.add(this.createTextFeld(150, 11, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 30, 140, 20, "Type:"));
+		this.fields.add(this.createTextFeld(150, 31, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 50, 140, 20, "Health:"));
+		this.fields.add(this.createTextFeld(150, 51, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 70, 140, 20, "Spawn Height:"));
+		this.labels.add(this.createLabel(20, 90, 130, 20, "Minimum:"));
+		this.fields.add(this.createTextFeld(150, 91, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(20, 110, 130, 20, "Maximum:"));
+		this.fields.add(this.createTextFeld(150, 111, 200, 20, 100, this));
+		
+		ListEdittor spawnBiomes = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				return "biome";
+			}
+		};
+		buttonID = spawnBiomes.init(this, buttonID, 360, 10, 200, 310, "Spawn Biomes");
+		this.edittors.add(spawnBiomes);
+		
+		ListEdittor drops = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				return new Drop();
+			}
+		};
+		buttonID = drops.init(this, buttonID, 10, 135, 150, 180, "Drops");
+		this.edittors.add(drops);
+		
+		ListEdittor notes = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				return "note";
+			}
+		};
+		buttonID = notes.init(this, buttonID, 190, 135, 150, 180, "Notes");
+		this.edittors.add(notes);
+		
+		this.refreshFields();
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		Entity e = (Entity) this.value;
+		
+		this.fields.get(4).setText(e.spawn_height_maximum);
+		this.fields.get(3).setText(e.spawn_height_minimum);
+		this.fields.get(2).setText(e.health);
+		this.fields.get(1).setText(e.type);
+		this.fields.get(0).setText(e.name);
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		
+	}
+	
+	@Override
+	public void buttonPressed(GuiButton button) {
+		super.buttonPressed(button);
+		
+		this.refreshFields();
+	}
+	
+}

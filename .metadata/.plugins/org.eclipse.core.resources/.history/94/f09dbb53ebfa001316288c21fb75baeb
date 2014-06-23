@@ -1,0 +1,32 @@
+package Main.edittor;
+
+import Core.Gui.GuiPanel;
+
+@SuppressWarnings("serial")
+public class DropEdittor extends EdittorPanel {
+	
+	public DropEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveFields() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

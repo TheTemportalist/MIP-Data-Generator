@@ -1,0 +1,12 @@
+package Main.MIP;
+
+public class Item {
+	
+	public String name;
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

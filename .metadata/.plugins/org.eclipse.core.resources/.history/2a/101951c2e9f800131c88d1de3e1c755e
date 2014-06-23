@@ -1,0 +1,16 @@
+package Main.MIP;
+
+import com.google.gson.Gson;
+
+public class MIPData {
+	
+	public MIPData() {
+	}
+	
+	public String plugin_title;
+	
+	public void print(Gson g) {
+		System.out.println(g.toJson(this));
+	}
+	
+}

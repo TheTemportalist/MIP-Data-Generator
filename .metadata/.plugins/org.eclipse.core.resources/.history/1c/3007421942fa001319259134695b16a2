@@ -1,0 +1,20 @@
+package Main.MIP;
+
+public class Block {
+	
+	public String name;
+	public String type;
+	public boolean ignoresGravity;
+	public boolean hasTranspanrency;
+	public boolean emitsLight;
+	public String blastResistance;
+	public String harvestLevel;
+	public String stackLimit;
+	public boolean flammable;
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

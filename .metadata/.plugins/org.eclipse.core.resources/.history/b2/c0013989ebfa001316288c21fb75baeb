@@ -1,0 +1,44 @@
+package Main.edittor;
+
+import Core.Gui.GuiPanel;
+
+@SuppressWarnings("serial")
+public class DropEdittor extends EdittorPanel {
+	
+	public DropEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Name:"));
+		this.fields.add(this.createTextFeld(100, 10, 100, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 35, 90, 20, "Chance:"));
+		this.fields.add(this.createTextFeld(100, 35, 100, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Rate:"));
+
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Minimum:"));
+		this.fields.add(this.createTextFeld(100, 10, 100, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 10, 90, 20, "Maximum:"));
+		this.fields.add(this.createTextFeld(100, 10, 100, 20, 100, this));
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void saveFields() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

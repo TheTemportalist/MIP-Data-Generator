@@ -1,0 +1,5 @@
+package Main.edittor;
+
+public class BiomeEdittor extends EdittorPanel {
+	
+}

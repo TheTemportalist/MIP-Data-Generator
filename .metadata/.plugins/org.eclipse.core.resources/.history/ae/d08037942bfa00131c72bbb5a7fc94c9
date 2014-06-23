@@ -1,0 +1,19 @@
+package Main.MIP;
+
+public class Entity {
+	
+	public String name;
+	public String type;
+	public int health;
+	public Drop[] drops;
+	public String[] spawn_biomes;
+	public int spawn_height_minimum;
+	public int spawn_height_maximum;
+	public String[] notes;
+	
+	@Override
+	public String toString() {
+		return this.name;
+	}
+	
+}

@@ -1,0 +1,18 @@
+package Main.MIP;
+
+public class Drop {
+	
+	public String name;
+	public String chance;
+	public String rate_minimum;
+	public String rate_maximum;
+	
+	public Drop() {
+		this.name = "drop";
+		this.chance = "0%";
+		this.rate_minimum = "0";
+		this.rate_maximum = "0";
+		
+	}
+	
+}

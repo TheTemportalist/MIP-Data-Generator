@@ -1,0 +1,104 @@
+package Main.edittor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import Core.Gui.GuiButton;
+import Core.Gui.GuiPanel;
+import Main.Gui;
+
+@SuppressWarnings("serial")
+public class EdittorPanel extends GuiPanel {
+	
+	final GuiPanel owner;
+	/**
+	 * Format: ""
+	 */
+	final String listName;
+	final int listIndex;
+	Object value;
+	
+	List<JLabel> labels = new ArrayList<JLabel>();
+	List<JTextField> fields = new ArrayList<JTextField>();
+	
+	GuiButton save;
+	List<ListEdittor> edittors = new ArrayList<ListEdittor>();
+	
+	public EdittorPanel(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, false);
+		this.owner = owner;
+		this.listName = listName;
+		this.listIndex = index;
+		this.value = value;
+		
+		this.initGui();
+	}
+	
+	protected void initGui() {
+		int buttonID = -1;
+		int x = this.guiLeft + 10;
+		int w = this.xSize - 20;
+		int h = 20;
+		int y = this.ySize - h - 10 - 20;
+		this.save = new GuiButton(++buttonID, x, y, w, h, "Save", this, this);
+		
+		if (this.listName.equals("authors")) {
+			
+			
+		}
+		else if (this.listName.equals("description")) {
+			
+		}
+		else if (this.listName.equals("entities")) {
+			
+			
+		}
+		else if (this.listName.equals("items")) {
+			
+		}
+		else if (this.listName.equals("blocks")) {
+			
+		}
+		
+	}
+	
+	public void refreshFields() {
+		if (this.listName.equalsIgnoreCase("Authors")) {
+			
+		}
+		else if (this.listName.equalsIgnoreCase("Entities")) {
+			
+			
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void saveFields() {
+		if (this.listName.equalsIgnoreCase("authors")) {
+			
+		}
+		else if (this.listName.equals("entities")) {
+			
+		}
+		
+	}
+	
+	@Override
+	public void buttonPressed(GuiButton button) {
+		if (button.id == this.save.id) {
+			
+			this.saveFields();
+			
+			((Gui) this.owner).passRefreshedData(this.listName, this.listIndex, this.value);
+			
+			JFrame frame = (JFrame) SwingUtilities.getRoot(this);
+			frame.dispose();
+			
+		}
+	}
+}

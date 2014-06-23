@@ -1,0 +1,75 @@
+package Main.edittor;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+
+import Core.Gui.GuiPanel;
+import Main.MIP.Block;
+
+@SuppressWarnings("serial")
+public class BlockEdittor extends EdittorPanel {
+	
+	JComboBox<Block.Type> blockType;
+	JCheckBox ignoresGravity;
+	JCheckBox hasTransparency;
+	JCheckBox emitsLight;
+	JCheckBox flammable;
+	
+	public BlockEdittor(int w, int h, GuiPanel owner, String listName, int index, Object value) {
+		super(w, h, owner, listName, index, value);
+	}
+	
+	@Override
+	public void initGui() {
+		super.initGui();
+		
+		this.labels.add(this.createLabel(10, 10, 100, 20, "Name:"));
+		this.fields.add(this.createTextFeld(100, 10, 200, 20, 100, this));
+		
+		this.labels.add(this.createLabel(10, 35, 100, 20, "Type:"));
+		this.blockType = new JComboBox<Block.Type>();
+		this.blockType.setBounds(100, 35, 150, 25);
+		this.blockType.addActionListener(this);
+		this.blockType.setModel(new DefaultComboBoxModel<Block.Type>(Block.Type.values()));
+		this.add(this.blockType);
+		
+		this.ignoresGravity = new JCheckBox("Is not affected by gravity");
+		this.ignoresGravity.setBounds(10, 60, 200, 20);
+		this.add(this.ignoresGravity);
+		
+		
+		
+		this.refreshFields();
+		
+	}
+	
+	@Override
+	public void refreshFields() {
+		Block block = (Block)this.value;
+		
+		this.fields.get(0).setText(block.name);
+		
+		for (int i = 0; i < Block.Type.values().length; i++) {
+			if (Block.Type.values()[i] == block.type) {
+				this.blockType.setSelectedIndex(i);
+				break;
+			}
+		}
+		
+		this.ignoresGravity.setSelected(block.ignoresGravity);
+		
+	}
+	
+	@Override
+	public void saveFields() {
+		Block block = new Block();
+		
+		block.name = this.fields.get(0).getText();
+		block.type = this.blockType.getItemAt(this.blockType.getSelectedIndex());
+		block.ignoresGravity = this.ignoresGravity.isSelected();
+		
+		this.value = block;
+	}
+	
+}

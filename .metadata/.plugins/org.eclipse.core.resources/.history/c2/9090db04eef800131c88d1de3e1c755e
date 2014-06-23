@@ -1,0 +1,51 @@
+package Main;
+
+public class JsonHelper {
+	
+	public static String toReadableString(String jsonString) {
+		String ret = "";
+		
+		char[] characters = jsonString.toCharArray();
+		
+		int tabSet = 0;
+		for (int i = 0; i < characters.length; i++) {
+			char c = characters[i];
+			
+			if (c == '}' || c == ']') {
+				tabSet--;
+			}
+			
+			if (c == '"') {
+				char prevChar = characters[i - 1];
+				if (prevChar == '{' || prevChar == '[' || prevChar == ',')
+					for (int tab = 1; tab <= tabSet; tab++) {
+						ret += "  ";
+					}
+			}
+			
+			if (c == '}' || c == ']') {
+				for (int tab = 1; tab <= tabSet; tab++) {
+					ret += "  ";
+				}
+			}
+			
+			if (c == '}' || c == ']') {
+				ret += '\n';
+			}
+			
+			ret += c;
+			
+			if (c == '{' || c == '[') {
+				tabSet++;
+				ret += '\n';
+			}
+			else if (c == ',') {
+				ret += '\n';
+			}
+			
+		}
+		
+		return ret;
+	}
+	
+}

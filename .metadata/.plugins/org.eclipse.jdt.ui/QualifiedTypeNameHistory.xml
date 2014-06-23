@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="com.google.gson.Gson"/>
+<fullyQualifiedTypeName name="javax.swing.JLabel"/>
+<fullyQualifiedTypeName name="javax.swing.ListModel"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="Main.MIPDataGenerator"/>
+<fullyQualifiedTypeName name="javax.swing.text.html.parser.Entity"/>
+<fullyQualifiedTypeName name="Main.MIP.Entity"/>
+<fullyQualifiedTypeName name="Main.MIP.Drop"/>
+<fullyQualifiedTypeName name="Main.MIP.Item"/>
+<fullyQualifiedTypeName name="Main.MIP.Item.Type"/>
+<fullyQualifiedTypeName name="Main.MIP.Block.Type"/>
+</qualifiedTypeNameHistroy>

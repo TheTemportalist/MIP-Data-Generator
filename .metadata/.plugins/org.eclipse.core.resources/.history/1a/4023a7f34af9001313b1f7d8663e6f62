@@ -1,0 +1,12 @@
+package Main.MIP;
+
+public class Version {
+	
+	public String minecraft, plugin;
+	
+	public Version() {
+		this.minecraft = "";
+		this.plugin = "";
+	}
+	
+}

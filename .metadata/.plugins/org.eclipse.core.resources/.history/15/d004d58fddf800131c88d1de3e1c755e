@@ -1,0 +1,224 @@
+package Main;
+
+import java.awt.CardLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import Main.Gui.CardPanel;
+import Main.Gui.GameOverPanel;
+import Main.Gui.GamePanel;
+import Main.Gui.MainPanel;
+import Main.Objects.Entity;
+import Main.Objects.Player;
+import Main.Settings.GameSetting;
+
+/**
+ * The main class for the game. Holds crucial information, starts the GUI, and
+ * activates an on tick updater.
+ * 
+ * @author dustinyost
+ * 
+ */
+public class InventoryGame {
+	
+	public static final String	gameVersion			= "1.0.0";
+	public static final int		itemGen				= 3;
+	public static final int		blockGen			= 5;
+	
+	public static InventoryGame	instance;
+	volatile boolean			running				= true;
+	
+	public JPanel				panel;
+	public static final String	mainPanelKey		= "MainPanel";
+	public static final String	gamePanelKey		= "GamePanel";
+	public static final String	gameOverPanelKey	= "GameOverPanel";
+	public final int			width, height;
+	
+	public GameSetting			gameSettings;
+	public Player				player;
+	
+	public final int			gridX;
+	public final int			gridY;
+	public Grid					currentGrid;
+	
+	public InventoryGame() {
+		this.width = 800;
+		this.height = 600;
+		
+		this.gameSettings = new GameSetting(GameSetting.GameScreen.MAIN,
+				GameSetting.GameMode.ADVENTURE, GameSetting.GameDifficulty.NORMAL);
+		
+		int gridMaxSide = 3; // gives 3x3 grid of (50x50 unit grid)s
+		int xCoord = 1, yCoord = 1;
+		for (int i = 1; i <= gridMaxSide; i++) {
+			xCoord = i;
+			for (int j = 1; j <= gridMaxSide; j++) {
+				yCoord = j;
+				String name = ((GameSetting.alphabet[xCoord - 1] + "") + (GameSetting.alphabet[yCoord - 1] + ""))
+						.toUpperCase();
+				
+				new Grid(name, j, i);
+				
+			}
+		}
+		
+		this.currentGrid = Grid.grids.get("AA");// new Grid("A1", 0, 0);
+		
+		this.gridX = (this.width)
+				- (this.currentGrid.gridSideLength * this.currentGrid.unitSideLength)
+				- this.currentGrid.unitSideLength;
+		this.gridY = (this.height)
+				- (this.currentGrid.gridSideLength * this.currentGrid.unitSideLength)
+				- this.currentGrid.unitSideLength - 20;
+		
+		this.player = new Player(this.currentGrid.getName(),
+				this.currentGrid.gridSideLength / 2 * 10, this.currentGrid.gridSideLength / 2 * 10);
+		for (int i = 0; i < this.currentGrid.getBlocks().size(); i++) {
+			Entity item = this.currentGrid.getBlocks().get(i);
+			if (item != null && item.posX == this.player.posX && item.posY == this.player.posY) {
+				this.currentGrid.removeBlock(item);
+			}
+		}
+		for (int i = 0; i < this.currentGrid.getItems().size(); i++) {
+			Entity item = this.currentGrid.getItems().get(i);
+			if (item != null && item.posX == this.player.posX && item.posY == this.player.posY) {
+				this.currentGrid.removeItem(item);
+			}
+		}
+		
+		JFrame frame = new JFrame("Inventory Game " + gameVersion);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		this.panel = new CardPanel(new CardLayout());
+		this.panel.add(new MainPanel(this.width, this.height), InventoryGame.mainPanelKey);
+		this.panel.add(new GamePanel(this.width, this.height), InventoryGame.gamePanelKey);
+		this.panel.add(new GameOverPanel(this.width, this.height), InventoryGame.gameOverPanelKey);
+				
+		frame.add(this.panel);
+		frame.setSize(this.width, this.height);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		
+		this.startTimerHackThread();
+	}
+	
+	private void startTimerHackThread() {
+		Thread thread = new Thread("Timer hack thread") {
+			public void run() {
+				while (InventoryGame.this.running) {
+					try {
+						if (InventoryGame.instance != null) {
+							InventoryGame.instance.onTick();
+						}
+						Thread.sleep(1);
+					} catch (InterruptedException interruptedexception) {
+						;
+					}
+				}
+			}
+		};
+		thread.setDaemon(true);
+		thread.start();
+	}
+	
+	private void onTick() {
+		if (this.panel != null) this.panel.repaint();
+		
+		if (this.gameSettings.difficulty == GameSetting.GameDifficulty.NORMAL) {
+			if (this.player.health <= 0) {
+				JPanel cards = InventoryGame.instance.panel;
+				CardLayout cl = (CardLayout)(cards.getLayout());
+			    cl.show(cards, InventoryGame.gameOverPanelKey);
+				this.gameSettings.screen = GameSetting.GameScreen.GAMEOVER;
+			}
+		}
+		
+	}
+	
+	public void movePlayer(String axis, int units) {
+		if (this.gameSettings.screen != GameSetting.GameScreen.GAME) return;
+		int newX = this.player.posX;
+		int newY = this.player.posY;
+		
+		if (axis.equals("x"))
+			newX = this.player.posX + units;
+		else if (axis.equals("y")) newY = this.player.posY + units;
+		
+		if (this.gameSettings.mode != GameSetting.GameMode.ADVENTURE
+				&& this.currentGrid.canPlaceHere(this.player, newX, newY, false)) {
+			this.player.posX = newX;
+			this.player.posY = newY;
+		}
+		else {
+			int xSide = 0, ySide = 0;
+			int min = 0, max = (this.currentGrid.gridSideLength * this.currentGrid.unitSideLength)
+					- this.currentGrid.unitSideLength;
+			
+			if (newX < min)
+				xSide = -1;
+			else if (newX > max) xSide = 1;
+			if (newY < min)
+				ySide = -1;
+			else if (newY > max) ySide = 1;
+			
+			if (xSide != 0 || ySide != 0) {
+				int currentGridX = this.currentGrid.gridPosX;
+				int currentGridY = this.currentGrid.gridPosY;
+				int newGridX = currentGridX + xSide;
+				int newGridY = currentGridY + ySide;
+				
+				if (newGridX != 0 || newGridY != 0) {
+					Grid newGrid = Grid.getGridByCoords(newGridX, newGridY);
+					if (newGrid != null) {
+						int newPlayerX = this.player.posX, newPlayerY = this.player.posY;
+						if (xSide != 0) {
+							if (this.player.posX <= min) { // left of grid
+								newPlayerX = max;
+							}
+							else if (this.player.posX >= max) { // right of grid
+								newPlayerX = min;
+							}
+						}
+						if (ySide != 0) {
+							if (this.player.posY <= min) {
+								newPlayerY = max;
+							}
+							else if (this.player.posY >= max) {
+								newPlayerY = min;
+							}
+						}
+						
+						if (newGrid.canPlaceHere(this.player, newPlayerX, newPlayerY, false)) {
+							this.player.posX = newPlayerX;
+							this.player.posY = newPlayerY;
+							this.currentGrid = newGrid;
+							this.player.currentGridName = this.currentGrid.getName();
+							return;
+						}
+					}
+				}
+			}
+			else if (this.currentGrid.canPlaceHere(this.player, newX, newY, false)) {
+				this.player.posX = newX;
+				this.player.posY = newY;
+			}
+		}
+		
+	}
+	
+	public int roundTens(int val) {
+		int x = val;
+		for (int i = 0; i < 9; i++) {
+			if (x % 10 == 0)
+				break;
+			else
+				x++;
+		}
+		return x;
+	}
+	
+	
+	
+}

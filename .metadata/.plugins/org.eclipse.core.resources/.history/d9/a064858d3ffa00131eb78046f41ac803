@@ -1,0 +1,296 @@
+package Main;
+
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.ListModel;
+
+import Core.Gui.GuiButton;
+import Core.Gui.GuiPanel;
+import Main.MIP.Author;
+import Main.MIP.Block;
+import Main.MIP.Entity;
+import Main.MIP.Item;
+import Main.MIP.MIPData;
+
+@SuppressWarnings({
+		"serial", "rawtypes"
+})
+public class Gui extends GuiPanel {
+	
+	GuiButton openData, newData, saveData;
+	JLabel plugin_title;
+	JTextField plugin_title_field;
+	
+	JLabel version;
+	JLabel version_MC, version_Plugin;
+	JTextField version_MC_field, version_Plugin_field;
+	
+	ListEdittor authors;
+	ListEdittor descriptions;
+	ListEdittor entity;
+	ListEdittor item;
+	ListEdittor block;
+	
+	public Gui(int xSize, int ySize) {
+		super(xSize, ySize);
+		
+	}
+	
+	@Override
+	protected void initGui() {
+		int buttonID = -1;
+		
+		this.openData = new GuiButton(++buttonID, 5, 5, 40, 20, "Open", this, this);
+		this.newData = new GuiButton(++buttonID, 50, 5, 40, 20, "New", this, this);
+		this.saveData = new GuiButton(++buttonID, this.guiRight - 5 - 40, 5, 40, 20, "Save", this,
+				this);
+		
+		this.plugin_title = this.createLabel(10, 30, 75, 20, "Plugin Title:");
+		this.plugin_title_field = this.createTextFeld(105, 31, 200, 20, 100, this);
+		
+		this.version = this.createLabel(10, 55, 60, 20, "Version:");
+		this.version_MC = this.createLabel(20, 75, 70, 20, "Minecraft:");
+		this.version_MC_field = this.createTextFeld(105, 76, 200, 20, 100, this);
+		this.version_Plugin = this.createLabel(20, 95, 70, 20, "Plugin:");
+		this.version_Plugin_field = this.createTextFeld(105, 96, 200, 20, 100, this);
+		
+		this.authors = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				Author ret = new Author();
+				ret.name = "author";
+				return ret;
+			}
+		};
+		buttonID = this.authors.init(this, buttonID, 10, 120, 180, 100, "Authors");
+		
+		this.descriptions = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				return "text";
+			}
+		};
+		buttonID = this.descriptions.init(this, buttonID, 340, 30, 420, 200, "Description");
+		
+		this.entity = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				Entity ret = new Entity();
+				ret.name = "entity";
+				return ret;
+			}
+		};
+		buttonID = this.entity.init(this, buttonID, 10, 260, 220, 280, "Entities");
+		
+		this.item = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				Item ret = new Item();
+				ret.name = "item";
+				return ret;
+			}
+		};
+		buttonID = this.item.init(this, buttonID, 260, 260, 220, 280, "Items");
+		
+		this.block = new ListEdittor() {
+			@Override
+			public Object getDefaultObject() {
+				Block ret = new Block();
+				ret.name = "block";
+				return ret;
+			}
+		};
+		buttonID = this.block.init(this, buttonID, 520, 260, 220, 280, "Block");
+		
+	}
+	
+	public void refreshFields() {
+		MIPData data = MIPDataGenerator.instance.getData();
+		
+		this.plugin_title_field.setText(data.plugin_title);
+		
+		this.version_MC_field.setText(data.version.minecraft);
+		this.version_Plugin_field.setText(data.version.plugin);
+		
+		this.authors.refreshList(data.authors);
+		
+		this.descriptions.refreshList(data.description);
+		
+		this.entity.refreshList(data.entities);
+		
+		this.item.refreshList(data.items);
+		
+		this.block.refreshList(data.blocks);
+		
+	}
+	
+	public void saveFields() {
+		MIPData data = MIPDataGenerator.instance.getData();
+		
+		if (data == null) return;
+		
+		data.plugin_title = this.plugin_title_field.getText();
+		
+		data.version.minecraft = this.version_MC_field.getText();
+		data.version.plugin = this.version_Plugin_field.getText();
+		
+		ListModel model = null;
+		
+		model = this.authors.list.getModel();
+		Author[] authors = new Author[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			authors[i] = (Author) model.getElementAt(i);
+		data.authors = authors;
+		
+		model = this.descriptions.list.getModel();
+		String[] descriptions = new String[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			descriptions[i] = (String) model.getElementAt(i);
+		data.description = descriptions;
+		
+		model = this.entity.list.getModel();
+		Entity[] entities = new Entity[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			entities[i] = (Entity) model.getElementAt(i);
+		data.entities = entities;
+		
+		model = this.item.list.getModel();
+		Item[] items = new Item[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			items[i] = (Item) model.getElementAt(i);
+		data.items = items;
+		
+		model = this.block.list.getModel();
+		Block[] blocks = new Block[model.getSize()];
+		for (int i = 0; i < model.getSize(); i++)
+			blocks[i] = (Block) model.getElementAt(i);
+		data.blocks = blocks;
+		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
+		this.saveFields();
+	}
+	
+	@Override
+	public void buttonPressed(GuiButton button) {
+		MIPData data = MIPDataGenerator.instance.getData();
+		if (button.id == this.openData.id) {
+			JFileChooser openFile = new JFileChooser();
+			openFile.setFileFilter(new JsonFilter());
+			if (openFile.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				MIPDataGenerator.instance.openData(openFile.getSelectedFile());
+				this.refreshFields();
+			}
+		}
+		else if (button.id == this.newData.id) {
+			MIPDataGenerator.instance.setData(new MIPData());
+			this.refreshFields();
+		}
+		else if (button.id == this.saveData.id) {
+			if (data == null) {
+				MIPDataGenerator.print("Unable to save data. No data present!");
+			}
+			else {
+				this.saveFields();
+				
+				JFileChooser saveFile = new JFileChooser();
+				saveFile.setSelectedFile(new File(MIPDataGenerator.instance.currentDataPluginID
+						+ ".json"));
+				saveFile.setFileFilter(new JsonFilter());
+				if (saveFile.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+					MIPDataGenerator.instance.saveData(saveFile.getSelectedFile());
+				}
+			}
+		}
+		else {
+			if (data != null) {
+				
+				if (this.authors.isValidButton(button.id)) {
+					Object[] objs = this.authors.buttonPress(button.id, data.authors);
+					data.authors = new Author[objs.length];
+					for (int i = 0; i < objs.length; i++) {
+						data.authors[i] = (Author) (objs[i]);
+					}
+				}
+				else if (this.descriptions.isValidButton(button.id)) {
+					Object[] objs = this.descriptions.buttonPress(button.id, data.description);
+					data.description = new String[objs.length];
+					for (int i = 0; i < objs.length; i++) {
+						data.description[i] = (String) (objs[i]);
+					}
+				}
+				else if (this.entity.isValidButton(button.id)) {
+					Object[] objs = this.entity.buttonPress(button.id, data.entities);
+					data.entities = new Entity[objs.length];
+					for (int i = 0; i < objs.length; i++) {
+						data.entities[i] = (Entity) (objs[i]);
+					}
+				}
+				else if (this.item.isValidButton(button.id)) {
+					Object[] objs = this.item.buttonPress(button.id, data.items);
+					data.items = new Item[objs.length];
+					for (int i = 0; i < objs.length; i++) {
+						data.items[i] = (Item) (objs[i]);
+					}
+				}
+				else if (this.block.isValidButton(button.id)) {
+					Object[] objs = this.block.buttonPress(button.id, data.blocks);
+					data.blocks = new Block[objs.length];
+					for (int i = 0; i < objs.length; i++) {
+						data.blocks[i] = (Block) (objs[i]);
+					}
+				}
+				
+				this.refreshFields();
+			}
+		}
+		
+	}
+	
+	public void passRefreshedData(String listName, int index, Object value) {
+		MIPData data = MIPDataGenerator.instance.getData();
+		
+		if (listName.equalsIgnoreCase("Authors")) {
+			if (index >= 0 && index < data.authors.length) {
+				data.authors[index] = (Author) value;
+			}
+		}
+		else if (listName.equalsIgnoreCase("Entities")) {
+			if (index >= 0 && index < data.entities.length) {
+				data.entities[index] = (Entity) value;
+			}
+		}
+		else if (listName.equalsIgnoreCase("Items")) {
+			if (index >= 0 && index < data.items.length) {
+				data.items[index] = (Item) value;
+			}
+		}
+		else if (listName.equalsIgnoreCase("Blocks")) {
+			if (index >= 0 && index < data.blocks.length) {
+				data.blocks[index] = (Block) value;
+			}
+		}
+		
+		MIPDataGenerator.instance.setData(data);
+		this.refreshFields();
+	}
+	
+	@Override
+	protected void drawForeground(Graphics2D g2d, FontMetrics fm) {
+		
+	}
+	
+	@Override
+	protected void drawBackground(Graphics2D g2d) {
+	}
+	
+}
